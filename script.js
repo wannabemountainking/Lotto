@@ -27,17 +27,27 @@ const computerPickAmongNumbers = () => {
   return [computerChoice, numbers];
 }
 
-function testifyNumbers() {
-
+function testifyInputNumbers(choice) {
+  for (let i = 0; i < choice.length; i++) {
+    const arrWithoutIndexI = choice.filter(element => element != choice[i])
+    if (isNaN(choice[i])) {
+      return false
+    }
+    if (choice[i] < 1 || choice[i] > 45) {
+      return false
+    }
+    if (arrWithoutIndexI.length < 5) {
+      return false
+    }
+  }
+  return (choice.length === 6)
 }
 
 const onSubmit = (event) => {
   event.preventDefault()
-  userChoice = $userChoice.value.split(",").map(number => parseInt(number))
-  if (testifyNumbers(userChoice)) {
-    return userChoice
-  } else {
-    return []
+  userChoice = $userChoice.value.split(",").map(number => (number === "") ? NaN : Number(number))
+  if (!testifyInputNumbers(userChoice)) {
+    userChoice = []
   }
 }
 
