@@ -7,36 +7,36 @@ const $result = document.querySelector("div#result")
 let userChoice = [];
 let computerChoice = [];
 let bonusNumber = 0;
+
+// 숫자 섞기: Fisher-Yates 알고리즘
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 //숫자 뽑기
 let numbers = Array(45)
     .fill(1)
     .map((element, index) =>
     index + element)
-console.log(numbers)
 
 // 로또 번호 생성기
 function generateLottoNumbers() {
   const nums = new Set();
   while (nums.size < 7) {
     const pickedNumber = Math.floor(Math.random() * 45) + 1;
-    nums.add(pickedNumber);
-
+    if ((nums.size === 6) && (!nums.has(pickedNumber))) {
+      bonusNumber = pickedNumber
+      console.log(nums, pickedNumber);
+      return Array.from(nums)
+    } else {
+      nums.add(pickedNumber);
+    }
   }
 }
-// function getLottoNumbers() {
-//   const nums = new Set();
-//   while (nums.size < 7) {
-//     bonusNumber = Math.floor(Mathj.random() * 45) + 1;
-//     nums.add(bonusNumber);
-//     if (nums.size === 6) {
-//       const difference = (arr1, arr2) => {
-//         return arr1.filter(x => !arr2.includes(x));
-//       };
-//       nums = difference(nums, [bonusNumber])
-//     }
-//   }
-//   return Array.from(nums);
-// }
 
 function testifyInputNumbers(choice) {
   for (let i = 0; i < choice.length; i++) {
@@ -63,9 +63,10 @@ function testifyInputNumbers(choice) {
 }
 
 const showComputerPick = () => {
-  computerChoice = i
-  $computerPick.textContent = computerChoice
-
+  computerChoice = generateLottoNumbers()
+  for (let i = 0; i < computerChoice.length; i++) {
+    $computerPick.textContent += computerChoice[i]
+  }
 }
 
 const onSubmit = (event) => {
@@ -76,9 +77,6 @@ const onSubmit = (event) => {
   }
   $userChoice.value =""
   showComputerPick()
-
-  console.log(userChoice)
-  console.log(computerChoice)
 }
 
 $userChoiceForm.addEventListener("submit", onSubmit)
